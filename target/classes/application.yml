@@ -1,0 +1,43 @@
+server:
+error:
+  include-message: always
+  include-binding-errors: always
+auth:
+  jwt:
+    secret: 30faa058f27f690c7e9a098d54ebcfb3d8725bcb85ee7907a2d84c69622229e2
+  endpoints:
+    protected: /hello, /calc/sum, /calc/subtract
+spring:
+  datasource:
+    #71742509 -- 70325f11fe5973d8af2245672c9fe5240dabaae3673dd777fba0b86bdf5770a3
+    password: 71742509
+    #jdbc:postgresql://localhost:5433/testdb -- jdbc:postgres://pacgxchvakxxdd:70325f11fe5973d8af2245672c9fe5240dabaae3673dd777fba0b86bdf5770a3@ec2-3-229-11-55.compute-1.amazonaws.com:5432/dcmcap4dcghv0s
+    url: jdbc:postgresql://localhost:5433/onbalance
+    #postgres -- pacgxchvakxxdd
+    username: postgres
+  jpa:
+    hibernate:
+      #create-drop -- validate
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect:  org.hibernate.dialect.PostgreSQL94Dialect
+        format_sql: true
+        show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: anythingdevteam@gmail.com
+    password: blzmkvxdkwzacsyl
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
