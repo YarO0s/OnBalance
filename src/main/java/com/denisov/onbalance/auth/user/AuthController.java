@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "auth", produces = "application/json")
 public class AuthController {
     private final UserRegistrationService userRegistrationService;
+    private final AuthenticationService authService;
 
-    public AuthController(UserRegistrationService userRegistrationService){
+    public AuthController(UserRegistrationService userRegistrationService,
+                          AuthenticationService authService){
         this.userRegistrationService = userRegistrationService;
+        this.authService = authService;
     }
 
     @PostMapping("/new")
@@ -27,4 +30,11 @@ public class AuthController {
     public String confirmUser(@RequestParam("token")String token){
         return new JSONObject().put("result", userRegistrationService.confirmUser(token)).toString();
     }
+
+    @PostMapping("/login")
+    public String authenticate(@RequestParam(name = "username")String username,
+                               @RequestParam(name = "password")String password){
+        return new JSONObject().put("result", authService.authenticate(username, password)).toString();
+    }
 }
+

@@ -33,7 +33,7 @@ public class AuthenticationService {
                 return "error: user not found";
             }
 
-            optToken = tokenRepository.findByAppUserId(userEntity); //here
+            optToken = tokenRepository.findByAppUserId(userEntity);
 
             if (optToken == null) {
                 return "error: token not found";

@@ -56,8 +56,26 @@ public class UserRegistrationService {
     }
 
     public String confirmUser(String token){
+        ConfirmationTokenEntity confirmationTokenEntity;
+        Optional<ConfirmationTokenEntity> optConfirmation = tokenRepository.findByToken(token);
+        Optional<ConfirmationTokenEntity> optConfirmationUpcase = tokenRepository.findByToken(token.toUpperCase());
+        if(!(optConfirmation.isPresent() || optConfirmationUpcase.isPresent())){
+            return "error: token not found";
+        } else {
+            confirmationTokenEntity = optConfirmation.get();
+        }
 
+        if(confirmationTokenEntity.getConfirmationTime()!=null){
+            return "error: have already been confirmed";
+        }
 
+        LocalDateTime confirmedAt = LocalDateTime.now();
+
+        if(confirmedAt.isAfter(confirmationTokenEntity.getExpirationTime())){
+            return "error: token expired";
+        }
+
+        tokenRepository.updateConfirmedAt(confirmedAt, confirmationTokenEntity.getId());
         return "successful: ";
     }
 }
