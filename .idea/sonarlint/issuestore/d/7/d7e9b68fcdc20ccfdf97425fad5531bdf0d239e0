@@ -1,0 +1,15 @@
+
+^
+java:S18543"CRemove this useless assignment to local variable "encryptedSecret".(©ªûáøÿÿÿÿ
+G
+java:S1135,"2Complete the task associated to this TODO comment.(×Ü¸{
+H
+java:S11351"2Complete the task associated to this TODO comment.(Í°ÏÖ
+M
+java:S11352"2Complete the task associated to this TODO comment.(›Å‘øÿÿÿÿ
+O
+java:S14813"4Remove this unused "encryptedSecret" local variable.(©ªûáøÿÿÿÿ
+\
+java:S2789&"FEnsure this "Optional" could never be null and remove this null-check.(î°ÜĞ
+M
+java:S3655*"7Call "optToken.isPresent()" before accessing the value.(‰å‹¸
