@@ -1,21 +1,3 @@
 
 r
 Bsrc/main/java/com/denisov/onbalance/security/SecretEncryption.java,7\2\7281ca6ca3e8efa3191ce082a34d301f8ce50ff4
-p
-@src/main/java/com/denisov/onbalance/activity/ActivityEntity.java,b\1\b16f7834d33a27c6a40fa643f4eba149c2e9185e
-{
-Ksrc/main/java/com/denisov/onbalance/activity/ActivityValidationService.java,7\5\75aef08c23ccddc26781dae57ca3e22d1465f580
-r
-Bsrc/test/java/unittest/activity/ActivityValidationServiceTest.java,a\e\aec06fad6f15bfb4f0e6d759685abdf58057f114
-x
-Hsrc/main/java/com/denisov/onbalance/auth/user/AuthenticationService.java,d\7\d7e9b68fcdc20ccfdf97425fad5531bdf0d239e0
-m
-=src/main/java/com/denisov/onbalance/auth/user/UserEntity.java,2\a\2a783b481021ab1fad69fa7363d583266e85aab3
-t
-Dsrc/main/java/com/denisov/onbalance/activity/ActivityRepository.java,b\d\bd06dbfcd93d1b0215bb27adf4cdf4ece2bd918f
-t
-Dsrc/main/java/com/denisov/onbalance/activity/ActivityController.java,f\1\f163f6f481a6200dd9ff9a17e6cba518eed40999
-q
-Asrc/main/java/com/denisov/onbalance/activity/ActivityService.java,c\7\c703e5ac95025ddfe3045bd27134ad5e95955b31
-7
-pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec

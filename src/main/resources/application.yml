@@ -9,12 +9,12 @@ auth:
     protected: /hello, /calc/sum, /calc/subtract
 spring:
   datasource:
-    #71742509 -- 70325f11fe5973d8af2245672c9fe5240dabaae3673dd777fba0b86bdf5770a3
-    password: 71742509
-    #jdbc:postgresql://localhost:5433/testdb -- jdbc:postgres://pacgxchvakxxdd:70325f11fe5973d8af2245672c9fe5240dabaae3673dd777fba0b86bdf5770a3@ec2-3-229-11-55.compute-1.amazonaws.com:5432/dcmcap4dcghv0s
-    url: jdbc:postgresql://localhost:5433/onbalance
-    #postgres -- pacgxchvakxxdd
-    username: postgres
+    #71742509 -- 3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90
+    password: 3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90
+    #jdbc:postgresql://localhost:5433/testdb -- jdbc:postgres://ogyaggevfdvlgz:3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90@ec2-52-86-115-245.compute-1.amazonaws.com:5432/d9ld1ln7uuafpo
+    url: jdbc:postgres://ogyaggevfdvlgz:3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90@ec2-52-86-115-245.compute-1.amazonaws.com:5432/d9ld1ln7uuafpo
+    #postgres --
+    username: ogyaggevfdvlgz
   jpa:
     hibernate:
       #create-drop -- validate

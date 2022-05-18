@@ -60,8 +60,8 @@ public class ActivityService {
 
         try{
             activityRepository.deleteById(id);
-        } catch(Excpetion e){
-            
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
 
