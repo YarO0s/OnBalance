@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 
-@ComponentScan(basePackages = {"com.denisov.onbalance.security."})
+@ComponentScan(basePackages = {"com.denisov.onbalance.security"})
 @ComponentScan(basePackages = {"com.denisov.onbalance.auth.user"})
 @ComponentScan(basePackages = {"com.denisov.onbalance.auth"})
 @ComponentScan(basePackages = {"com.denisov.onbalance.email"})

@@ -15,5 +15,3 @@ r
 Bsrc/test/java/unittest/activity/ActivityValidationServiceTest.java,a\e\aec06fad6f15bfb4f0e6d759685abdf58057f114
 x
 Hsrc/main/java/com/denisov/onbalance/security/BCryptSecretEncryption.java,4\1\41933a21a7bc5a54ea8d05009f3aa6f99b00c14c
-‚
-Rsrc/main/java/com/denisov/onbalance/auth/confirmation/ConfirmationTokenEntity.java,1\6\1686aaee1e59d24d37d61783e727f9b08c0b3153
