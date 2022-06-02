@@ -14,7 +14,11 @@ import java.io.IOException;
 
 @Component
 public class AuthFilter extends OncePerRequestFilter{
-    JWTService jwtService = new JWTService();
+    private final JWTService jwtService;
+
+    public AuthFilter(JWTService jwtService){
+        this.jwtService = jwtService;
+    }
 
     @Value("${auth.endpoints.protected}")
     private String[] enabled;
@@ -32,7 +36,7 @@ public class AuthFilter extends OncePerRequestFilter{
         for(String str : enabled){
             if(str.compareTo(req.getRequestURI())==0){
                 String authHeader = req.getHeader(HttpHeaders.AUTHORIZATION);
-                System.out.println(authHeader);
+                System.out.println("header: " + authHeader);
 
 
                 if(authHeader == null || authHeader == null){

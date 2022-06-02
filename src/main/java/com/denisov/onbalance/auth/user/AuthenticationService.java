@@ -13,14 +13,15 @@ import java.util.Optional;
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final ConfirmationTokenRepository tokenRepository;
-    private final JWTService jwtService = new JWTService();
-
+    private final JWTService jwtService;
     private final SecretEncryption passwordEncoder = new BCryptSecretEncryption();
 
     public AuthenticationService(UserRepository userRepository,
-                                 ConfirmationTokenRepository tokenRepository){
+                                 ConfirmationTokenRepository tokenRepository,
+                                 JWTService jwtService){
         this.userRepository = userRepository;
         this.tokenRepository = tokenRepository;
+        this.jwtService = jwtService;
     }
 
     public String authenticate(String identifier, String secret){

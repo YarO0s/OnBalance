@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.denisov.onbalance.auth.user.UserEntity;
+import com.denisov.onbalance.auth.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,14 @@ import java.time.Instant;
 
 @Service
 public class JWTService {
+    private final UserRepository userRepository;
+
     @Value("${auth.jwt.secret}")
     private String secretKey;
+
+    public JWTService(UserRepository userRepository){
+        this.userRepository = userRepository;
+    }
 
     public String generateJWT(UserEntity user){
         secretKey = "30faa058f27f690c7e9a098d54ebcfb3d8725bcb85ee7907a2d84c69622229e2";
@@ -51,6 +58,8 @@ public class JWTService {
                     return false;
                 }
 
+
+
             } catch(JWTVerificationException verificationException){
                 verificationException.printStackTrace();
                 return false;
@@ -60,5 +69,20 @@ public class JWTService {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public Long identifyUser(String authHeader){
+        secretKey = "30faa058f27f690c7e9a098d54ebcfb3d8725bcb85ee7907a2d84c69622229e2";
+        Algorithm alg = Algorithm.HMAC256(secretKey);
+        JWTVerifier verifier = JWT.require(alg).build();
+        DecodedJWT decodedJWT = verifier.verify(authHeader.substring(7));
+        String userId = decodedJWT.getSubject();
+        Long id = null;
+        try{
+            id = Long.parseLong(userId);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        return id;
     }
 }

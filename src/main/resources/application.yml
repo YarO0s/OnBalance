@@ -6,15 +6,15 @@ auth:
   jwt:
     secret: 30faa058f27f690c7e9a098d54ebcfb3d8725bcb85ee7907a2d84c69622229e2
   endpoints:
-    protected: /hello, /calc/sum, /calc/subtract
+    protected: /test, /activity/new, /activity/
 spring:
   datasource:
     #71742509 -- 3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90
-    password: 3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90
+    password: 71742509
     #jdbc:postgresql://localhost:5433/testdb -- jdbc:postgres://ogyaggevfdvlgz:3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90@ec2-52-86-115-245.compute-1.amazonaws.com:5432/d9ld1ln7uuafpo
-    url: jdbc:postgres://ogyaggevfdvlgz:3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90@ec2-52-86-115-245.compute-1.amazonaws.com:5432/d9ld1ln7uuafpo
+    url: jdbc:postgresql://localhost:5433/onbalance
     #postgres --
-    username: ogyaggevfdvlgz
+    username: postgres
   jpa:
     hibernate:
       #create-drop -- validate

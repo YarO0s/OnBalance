@@ -1,5 +1,8 @@
 package com.denisov.onbalance.activity;
 
+import com.denisov.onbalance.auth.user.UserEntity;
+import com.denisov.onbalance.auth.user.UserRepository;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,15 +13,29 @@ import java.util.Optional;
 public class ActivityService {
     private final ActivityRepository activityRepository;
     private final ActivityValidationService activityValidationService;
+    private final UserRepository userRepository;
 
-    public ActivityService(ActivityRepository activityRepository, ActivityValidationService activityValidationService){
+    public ActivityService(ActivityRepository activityRepository, ActivityValidationService activityValidationService,
+                           UserRepository userRepository){
         this.activityRepository = activityRepository;
         this.activityValidationService = activityValidationService;
+        this.userRepository = userRepository;
     }
 
-    public String saveActivity(ActivityEntity activityEntity){
-        Iterator<ActivityEntity> activityIterator = activityRepository.findAll().iterator();
+    public String saveActivity(String title, String color, String description, long userId){
         ArrayList<ActivityEntity> activityEntities = new ArrayList<>();
+        Optional userOpt = userRepository.findById(userId);
+        UserEntity userEntity = null;
+
+        if(userOpt.isPresent()){
+            userEntity = (UserEntity) userOpt.get();
+        } else {
+            return "error: user not found";
+        }
+
+        Iterator<ActivityEntity> activityIterator = activityRepository.findAllByUserId(userEntity).iterator();
+
+        ActivityEntity activityEntity = new ActivityEntity(title, color, description, 0, userEntity);
 
         if(!activityValidationService.isValid(activityEntity)){
             return "error: activity is not valid";
@@ -64,6 +81,31 @@ public class ActivityService {
             e.printStackTrace();
         }
         return "";
+    }
+
+
+    //TODO: replace userRepository with userDefaultService;
+    public String findAllActivityByUserId(Long id){
+        JSONObject result = new JSONObject();
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
+        UserEntity userEntity = null;
+        if(optionalUserEntity.isPresent()){
+            userEntity = optionalUserEntity.get();
+        } else{
+            return "error: user not found";
+        }
+
+        ArrayList<ActivityEntity> activityEntities = new ArrayList<ActivityEntity>();
+        Iterator<ActivityEntity> activities = activityRepository.findAllByUserId(userEntity).iterator();
+        while(activities.hasNext()){
+            activityEntities.add(activities.next());
+        }
+        if(activityEntities.size() == 0){
+            result.put("result", "error: activities not found");
+        }
+        result.put("result", activityEntities);
+
+        return result.toString();
     }
 
 }
