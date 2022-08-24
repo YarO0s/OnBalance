@@ -23,18 +23,25 @@ public class AuthController {
                                @RequestParam("email")String email,
                                @RequestParam("password")String password){
         UserEntity user = new UserEntity(name, email, password);
-        return new JSONObject().put("result", ""+ userRegistrationService.registerUser(user)).toString();
+        return userRegistrationService.registerUser(user);
     }
 
     @PostMapping("/confirm")
-    public String confirmUser(@RequestParam("token")String token){
-        return new JSONObject().put("result", userRegistrationService.confirmUser(token)).toString();
+    public String confirmUser(@RequestParam("username") String username, @RequestParam("token") String token){
+        return userRegistrationService.confirmUser(username, token);
     }
 
     @PostMapping("/login")
     public String authenticate(@RequestParam(name = "username")String username,
                                @RequestParam(name = "password")String password){
-        return new JSONObject().put("result", authService.authenticate(username, password)).toString();
+        return authService.authenticate(username, password);
+    }
+
+    @PostMapping("/logout")
+    public String logout(@RequestParam(name = "username")String username,
+                         @RequestParam(name = "password")String password){
+        //return authService.logout()
+        return "";
     }
 }
 

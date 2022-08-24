@@ -12,13 +12,13 @@ spring:
     #71742509 -- 3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90
     password: 71742509
     #jdbc:postgresql://localhost:5433/testdb -- jdbc:postgres://ogyaggevfdvlgz:3908f476aa769cbbe8ca61cb5e998151e2100c0211db01de190b5c9010764d90@ec2-52-86-115-245.compute-1.amazonaws.com:5432/d9ld1ln7uuafpo
-    url: jdbc:postgresql://localhost:5433/onbalance
+    url: jdbc:postgresql://localhost:5432/onbalance
     #postgres --
     username: postgres
   jpa:
     hibernate:
       #create-drop -- validate
-      ddl-auto: create-drop
+      ddl-auto: validate
     properties:
       hibernate:
         dialect:  org.hibernate.dialect.PostgreSQL94Dialect

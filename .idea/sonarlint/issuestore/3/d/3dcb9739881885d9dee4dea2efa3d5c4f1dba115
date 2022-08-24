@@ -1,0 +1,9 @@
+
+w
+java:S1450"\Remove the "secretEncoder" field and declare it as a local variable in the relevant methods.(ýà‡Ðÿÿÿÿÿ
+G
+java:S1135"2Complete the task associated to this TODO comment.(öàÛN
+f
+java:S2259/"KA "NullPointerException" could be thrown; "getRootCause()" can return null.( ’¤”ùÿÿÿÿ
+Y
+java:S3655A">Call "optConfirmation.isPresent()" before accessing the value.(µš®‘üÿÿÿÿ

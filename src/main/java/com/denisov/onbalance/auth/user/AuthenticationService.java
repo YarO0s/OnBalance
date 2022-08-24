@@ -5,6 +5,7 @@ import com.denisov.onbalance.auth.confirmation.ConfirmationTokenRepository;
 import com.denisov.onbalance.security.BCryptSecretEncryption;
 import com.denisov.onbalance.security.JWTService;
 import com.denisov.onbalance.security.SecretEncryption;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,24 +28,36 @@ public class AuthenticationService {
     public String authenticate(String identifier, String secret){
         Optional<ConfirmationTokenEntity> optToken;
         UserEntity userEntity = identifyUserEntity(identifier);
+        JSONObject response = new JSONObject();
         String jwt = "";
+
+        if(identifier == null || identifier == "" || secret == null || secret == ""){
+            response.put("result", false);
+            response.put("message", "provided data not valid");
+        }
 
         try {
             if(userEntity == null){
-                return "error: user not found";
+                response.put("result", false);
+                response.put("message", "user not found");
+                return response.toString();
             }
 
             optToken = tokenRepository.findByAppUserId(userEntity);
 
             if (optToken == null) {
-                return "error: token not found";
+                response.put("result", false);
+                response.put("message", "token not found");
+                return response.toString();
             }
 
             ConfirmationTokenEntity confirmationToken = optToken.get();
 
             //TODO: regenerate token and send again
             if (confirmationToken.getConfirmationTime() == null) {
-                return "error: account not confirmed";
+                response.put("result", false);
+                response.put("message", "account not confirmed");
+                return response.toString();
             }
 
             //TODO:Email or nickname
@@ -53,13 +66,23 @@ public class AuthenticationService {
             if (passwordEncoder.checkValidity(secret, userEntity)) {
                 jwt = jwtService.generateJWT(userEntity);
             } else {
-                return "error: password incorrect";
+                response.put("result", false);
+                response.put("message", "incorrect password");
+                return response.toString();
             }
         } catch(Exception e){
             e.printStackTrace();
-            return "error: authentication service error";
+            response.put("result", false);
+            response.put("message", "auth service error");
+            return response.toString();
         }
-        return "successful: " + jwt;
+        response.put("result", true);
+        response.put("id", userEntity.getId());
+        response.put("name", userEntity.getName());
+        response.put("email", userEntity.getEmail());
+        response.put("message", "authenticated");
+        response.put("token", jwt);
+        return response.toString();
     }
 
     private UserEntity identifyUserEntity(String identifier){

@@ -17,4 +17,9 @@ public interface ConfirmationTokenRepository extends CrudRepository<Confirmation
     @Transactional
     @Query(value = "UPDATE confirmation_token SET confirmation_time = ?1 WHERE id = ?2", nativeQuery = true)
     public int updateConfirmedAt(LocalDateTime confirmedAt, Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM confirmation_token where app_user_id = ?1", nativeQuery = true)
+    public int removeByUserId(UserEntity userEntity);
 }

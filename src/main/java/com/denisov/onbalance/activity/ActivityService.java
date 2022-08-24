@@ -23,89 +23,206 @@ public class ActivityService {
     }
 
     public String saveActivity(String title, String color, String description, long userId){
-        ArrayList<ActivityEntity> activityEntities = new ArrayList<>();
         Optional userOpt = userRepository.findById(userId);
+        JSONObject response = new JSONObject();
         UserEntity userEntity = null;
+
 
         if(userOpt.isPresent()){
             userEntity = (UserEntity) userOpt.get();
         } else {
-            return "error: user not found";
+            response.put("result", false);
+            response.put("message", "user not found");
+            return response.toString();
         }
 
-        Iterator<ActivityEntity> activityIterator = activityRepository.findAllByUserId(userEntity).iterator();
-
+        long activitiesAmount = activityRepository.countByUserId(userEntity);
         ActivityEntity activityEntity = new ActivityEntity(title, color, description, 0, userEntity);
 
         if(!activityValidationService.isValid(activityEntity)){
-            return "error: activity is not valid";
+            response.put("result", false);
+            response.put("message", "activity data is not valid");
+            return response.toString();
         }
 
-        if(activityIterator.hasNext()){
-            activityEntities.add(activityIterator.next());
-        }
-
-        if(activityEntities.size() == 15){
-            return "error: constraint (15 max activities) violated";
+        if(activitiesAmount >= 15){
+            response.put("result", false);
+            response.put("message", "constraint of 15 max activities violated");
+            return response.toString();
         }
 
         try {
             activityRepository.save(activityEntity);
         } catch (Exception e){
             e.printStackTrace();
-            return "error: unknown error occured";
+            response.put("result", false);
+            response.put("message", "internal server error");
+            return response.toString();
         }
-
-        return "successful: activity saved";
+        response.put("result", true);
+        response.put("message", "activity saved");
+        return response.toString();
     }
 
-    public String removeActivityById(long id){
-        Optional<ActivityEntity> activityToRemove = activityRepository.findById(id);
-        Iterator<ActivityEntity> activities = activityRepository.findAll().iterator();
-        ArrayList<ActivityEntity> activityEntities = new ArrayList<ActivityEntity>();
-        if(activities.hasNext()) {
-            activityEntities.add(activities.next());
+    public String removeActivityById(long activityId, long userId){
+        Optional userOpt = userRepository.findById(userId);
+        JSONObject response = new JSONObject();
+        UserEntity userEntity = null;
+
+        if(userOpt.isPresent()){
+            userEntity = (UserEntity) userOpt.get();
+        } else {
+            response.put("result", false);
+            response.put("message", "user not found");
+            return response.toString();
         }
 
-        if(activityEntities.size()==4){
-            return "error: constraint (4 min activities) violated";
+        long activitiesAmount = activityRepository.countByUserId(userEntity);
+        Optional<ActivityEntity> activityToRemove = activityRepository.findById(activityId);
+        Iterator<ActivityEntity> activities = activityRepository.findAllByUserId(userEntity).iterator();
+
+
+        //TODO: If user wants to delete some activity while having only 4 of them, offer to recreate or smth
+        if(activitiesAmount <= 4){
+            response.put("result", false);
+            response.put("message", "constraint of 4 min activities violated");
+            return response.toString();
         }
 
         if(!activityToRemove.isPresent()){
-            return "error: activity not found";
+            response.put("result", false);
+            response.put("message", "activity not found");
+            return response.toString();
+        }
+
+        ActivityEntity activity = activityToRemove.get();
+
+        if(activity.getUserId().getId() != userId){
+            response.put("result", false);
+            response.put("message", "access denied");
+            return response.toString();
         }
 
         try{
-            activityRepository.deleteById(id);
+            activityRepository.deleteById(activityId);
         } catch(Exception e){
             e.printStackTrace();
+            response.put("result", false);
+            response.put("message", "internal server error");
+            return response.toString();
         }
-        return "";
+
+        response.put("result", false);
+        response.put("message", "activity removed");
+        return response.toString();
     }
 
 
     //TODO: replace userRepository with userDefaultService;
     public String findAllActivityByUserId(Long id){
-        JSONObject result = new JSONObject();
+        JSONObject response = new JSONObject();
         Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
         UserEntity userEntity = null;
         if(optionalUserEntity.isPresent()){
             userEntity = optionalUserEntity.get();
         } else{
-            return "error: user not found";
+            response.put("result", false);
+            response.put("message", "user not found");
+            return response.toString();
         }
 
         ArrayList<ActivityEntity> activityEntities = new ArrayList<ActivityEntity>();
+        ArrayList<ActivityResponse> activityResponseArray = new ArrayList<ActivityResponse>();
         Iterator<ActivityEntity> activities = activityRepository.findAllByUserId(userEntity).iterator();
         while(activities.hasNext()){
-            activityEntities.add(activities.next());
+            ActivityEntity entity = activities.next();
+            activityResponseArray.add(new ActivityResponse(entity.getId(), entity.getCompletionStatus(), entity.getName(), entity.getColor(), entity.getDescription()));
         }
-        if(activityEntities.size() == 0){
-            result.put("result", "error: activities not found");
+        if(activityResponseArray.size() == 0){
+            response.put("result", false);
+            response.put("message", "activities not found");
+            return response.toString();
         }
-        result.put("result", activityEntities);
+        response.put("result", true);
+        response.put("message", "activities found");
+        response.put("activities", activityResponseArray);
 
-        return result.toString();
+        return response.toString();
     }
 
+    public String findActivityById(long activityId, long userId){
+        Optional<UserEntity> optUserEntity = userRepository.findById(userId);
+        JSONObject response = new JSONObject();
+        if(!optUserEntity.isPresent()){
+            response.put("result", false);
+            response.put("message", "user not found");
+            return response.toString();
+        }
+
+        Optional<ActivityEntity> optActivity = activityRepository.findById(activityId);
+        if(!optActivity.isPresent()){
+            response.put("result", false);
+            response.put("message", "related activity does not exist");
+            return response.toString();
+        }
+
+        ActivityEntity activity = optActivity.get();
+        if(activity.getUserId().getId() != userId){
+            response.put("result", false);
+            response.put("message", "access denied");
+            return response.toString();
+        }
+
+        ActivityResponse activityResponse = new ActivityResponse(activity.getId(), activity.getCompletionStatus(),
+                                                                 activity.getName(), activity.getColor(), activity.getDescription());
+
+        response.put("result", true);
+        response.put("message", "activity found");
+        response.put("activities", JSONObject.wrap(activityResponse));
+        return response.toString();
+    }
+
+    public String updateActivity(long activityToUpdateId, String title, String color,
+                                 String description, int completionStatus, long userId){
+        Optional<UserEntity> optUserEntity = userRepository.findById(userId);
+        JSONObject response = new JSONObject();
+        if(!optUserEntity.isPresent()){
+            response.put("result", false);
+            response.put("message", "user not found");
+            return response.toString();
+        }
+
+        Optional<ActivityEntity> optActivity = activityRepository.findById(activityToUpdateId);
+        if(!optActivity.isPresent()){
+            response.put("result", false);
+            response.put("message", "activity not found");
+            return response.toString();
+        }
+
+        ActivityEntity activity = optActivity.get();
+        if(activity.getUserId().getId() != userId){
+            response.put("result", false);
+            response.put("message", "access denied");
+            return response.toString();
+        }
+
+        if(!activityValidationService.isValid(new ActivityEntity(title, color, description, completionStatus, optUserEntity.get()))){
+            response.put("result", false);
+            response.put("message", "activity not valid");
+            return response.toString();
+        }
+
+        try{
+            activityRepository.update(title, color, description, completionStatus, activityToUpdateId);
+        } catch(Exception e){
+            e.printStackTrace();
+            response.put("result", false);
+            response.put("message", "internal server error");
+            return response.toString();
+        }
+
+        response.put("result", true);
+        response.put("message", "activity updated");
+        return response.toString();
+    }
 }
